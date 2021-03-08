@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,6 +16,9 @@
 		7D2577C425F302C700E298BD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D2577C225F302C700E298BD /* LaunchScreen.storyboard */; };
 		7D2577CF25F302C800E298BD /* WatchListStockAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2577CE25F302C800E298BD /* WatchListStockAppTests.swift */; };
 		7D2577DA25F302C800E298BD /* WatchListStockAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2577D925F302C800E298BD /* WatchListStockAppUITests.swift */; };
+		7D2577FE25F57A7100E298BD /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2577FC25F57A7100E298BD /* CustomTableViewCell.swift */; };
+		7D2577FF25F57A7100E298BD /* CustomTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D2577FD25F57A7100E298BD /* CustomTableViewCell.xib */; };
+		FAA3DCA3F60C467DC9D74DCC /* Pods_WatchListStockApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7881B3F575F8FBDB572224 /* Pods_WatchListStockApp.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2E7881B3F575F8FBDB572224 /* Pods_WatchListStockApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WatchListStockApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		35502458D95B575E08F14E00 /* Pods-WatchListStockApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WatchListStockApp.release.xcconfig"; path = "Target Support Files/Pods-WatchListStockApp/Pods-WatchListStockApp.release.xcconfig"; sourceTree = "<group>"; };
 		7D2577B125F302C500E298BD /* WatchListStockApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchListStockApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D2577B425F302C500E298BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7D2577B625F302C500E298BD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -51,6 +56,9 @@
 		7D2577D525F302C800E298BD /* WatchListStockAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WatchListStockAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D2577D925F302C800E298BD /* WatchListStockAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchListStockAppUITests.swift; sourceTree = "<group>"; };
 		7D2577DB25F302C800E298BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7D2577FC25F57A7100E298BD /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
+		7D2577FD25F57A7100E298BD /* CustomTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomTableViewCell.xib; sourceTree = "<group>"; };
+		8933E972C3AFDA80D8E3C172 /* Pods-WatchListStockApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WatchListStockApp.debug.xcconfig"; path = "Target Support Files/Pods-WatchListStockApp/Pods-WatchListStockApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAA3DCA3F60C467DC9D74DCC /* Pods_WatchListStockApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +94,8 @@
 				7D2577CD25F302C800E298BD /* WatchListStockAppTests */,
 				7D2577D825F302C800E298BD /* WatchListStockAppUITests */,
 				7D2577B225F302C500E298BD /* Products */,
+				D44BF0F570A12AD0EE51D5AC /* Pods */,
+				F185337E08FF0DA24AB7241F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,6 +120,8 @@
 				7D2577C225F302C700E298BD /* LaunchScreen.storyboard */,
 				7D2577C525F302C700E298BD /* Info.plist */,
 				7D2577BD25F302C500E298BD /* WatchListStockApp.xcdatamodeld */,
+				7D2577FC25F57A7100E298BD /* CustomTableViewCell.swift */,
+				7D2577FD25F57A7100E298BD /* CustomTableViewCell.xib */,
 			);
 			path = WatchListStockApp;
 			sourceTree = "<group>";
@@ -131,6 +144,23 @@
 			path = WatchListStockAppUITests;
 			sourceTree = "<group>";
 		};
+		D44BF0F570A12AD0EE51D5AC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				8933E972C3AFDA80D8E3C172 /* Pods-WatchListStockApp.debug.xcconfig */,
+				35502458D95B575E08F14E00 /* Pods-WatchListStockApp.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		F185337E08FF0DA24AB7241F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2E7881B3F575F8FBDB572224 /* Pods_WatchListStockApp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -138,9 +168,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7D2577DE25F302C800E298BD /* Build configuration list for PBXNativeTarget "WatchListStockApp" */;
 			buildPhases = (
+				B19644F6B531501D8A84F461 /* [CP] Check Pods Manifest.lock */,
 				7D2577AD25F302C500E298BD /* Sources */,
 				7D2577AE25F302C500E298BD /* Frameworks */,
 				7D2577AF25F302C500E298BD /* Resources */,
+				2467F0390F979F4CD94DDFC1 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -236,6 +268,7 @@
 			files = (
 				7D2577C425F302C700E298BD /* LaunchScreen.storyboard in Resources */,
 				7D2577C125F302C700E298BD /* Assets.xcassets in Resources */,
+				7D2577FF25F57A7100E298BD /* CustomTableViewCell.xib in Resources */,
 				7D2577BC25F302C500E298BD /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -256,12 +289,55 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		2467F0390F979F4CD94DDFC1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-WatchListStockApp/Pods-WatchListStockApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-WatchListStockApp/Pods-WatchListStockApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-WatchListStockApp/Pods-WatchListStockApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B19644F6B531501D8A84F461 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WatchListStockApp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		7D2577AD25F302C500E298BD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				7D2577B925F302C500E298BD /* ViewController.swift in Sources */,
+				7D2577FE25F57A7100E298BD /* CustomTableViewCell.swift in Sources */,
 				7D2577B525F302C500E298BD /* AppDelegate.swift in Sources */,
 				7D2577BF25F302C500E298BD /* WatchListStockApp.xcdatamodeld in Sources */,
 				7D2577B725F302C500E298BD /* SceneDelegate.swift in Sources */,
@@ -437,6 +513,7 @@
 		};
 		7D2577DF25F302C800E298BD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8933E972C3AFDA80D8E3C172 /* Pods-WatchListStockApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -456,6 +533,7 @@
 		};
 		7D2577E025F302C800E298BD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 35502458D95B575E08F14E00 /* Pods-WatchListStockApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
