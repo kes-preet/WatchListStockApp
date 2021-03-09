@@ -30,7 +30,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     let realm = try! Realm()
     var Tickers = ["AAPL","AMZN","GOOG"].sorted()
     var quotes: Results<Quote>?
-    
+    var timer: Timer?
     
     
     @IBOutlet var tableView: UITableView!
@@ -50,16 +50,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.dataSource = self
    
 
+        refreshData()
         
-        for ticker in Tickers
-        {
-            getData(tickerSymbol: ticker)
-            realm.refresh()
-        }
         
-        quotes = realm.objects(Quote.self).sorted(byKeyPath: "id")
+//        for ticker in Tickers
+//        {
+//            getData(tickerSymbol: ticker)
+//            realm.refresh()
+//        }
         
-        tableView.reloadData()
+//        quotes = realm.objects(Quote.self).sorted(byKeyPath: "id")
+//
+//        tableView.reloadData()
  
         
         
@@ -134,6 +136,28 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.myBidPriceLabel.text = String(bidPriceText)
         
         return cell
+    }
+    
+    func refreshData()
+    {
+        func repeatThis()
+        {
+            for ticker in self.Tickers
+            {
+                self.getData(tickerSymbol: ticker)
+                self.realm.refresh()
+            }
+            
+            self.quotes = realm.objects(Quote.self).sorted(byKeyPath: "id")
+            
+            self.tableView.reloadData()
+        }
+        
+        repeatThis()
+
+        self.timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true, block: { (timer) in
+            repeatThis()
+        })
     }
 
     func getData(tickerSymbol: String)
