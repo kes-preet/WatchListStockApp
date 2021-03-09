@@ -28,7 +28,7 @@ import RealmSwift
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let realm = try! Realm()
-    let Tickers = ["AAPL","AMZN","GOOG"]
+    var Tickers = ["AAPL","AMZN","GOOG"].sorted()
     var quotes: Results<Quote>?
     
     
@@ -57,13 +57,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             realm.refresh()
         }
         
-        quotes = realm.objects(Quote.self)
-
+        quotes = realm.objects(Quote.self).sorted(byKeyPath: "id")
+        
+        tableView.reloadData()
  
         
         
     }
     
+    @IBAction func addStockButton(_ sender: UIButton) {
+        guard let vc = storyboard?.instantiateViewController(withIdentifier: "search_vc") as? SearchViewController else { return }
+        present(vc, animated: true)
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return quotes!.count
@@ -73,7 +78,38 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if editingStyle == .delete {
             
             
-            tableView.deleteRows(at: [indexPath], with: .fade)
+        
+//
+//            try! self.realm.write {
+//                self.realm.delete(self.realm.objects(Quote.self).filter(quotes![indexPath.row].id))
+//                self.realm.refresh()
+//            }
+//
+              Tickers.remove(at: indexPath.row)
+//
+              debugPrint(Tickers)
+//
+            
+            let data = self.realm.object(ofType: Quote.self, forPrimaryKey: self.quotes![indexPath.row].id)
+            
+            try! self.realm.write {
+             
+                self.realm.delete(data!)
+            }
+            for ticker in Tickers
+            {
+                self.getData(tickerSymbol: ticker)
+                self.realm.refresh()
+            }
+            
+            
+            self.quotes = self.realm.objects(Quote.self).sorted(byKeyPath: "id")
+            
+            debugPrint(self.quotes?.count)
+            
+            //tableView.deleteRows(at: [indexPath], with: .fade)
+            tableView.reloadData()
+            
             
         } else if editingStyle == .insert
         {
@@ -112,19 +148,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 //debugPrint(json)
                 
                 if let companyName = json["companyName"].string {
-                    debugPrint(companyName)
+                  //  debugPrint(companyName)
                 } else { return }
                 
                 if let latestPrice = json["latestPrice"].string {
-                    debugPrint(latestPrice)
+                    //debugPrint(latestPrice)
                 } else {  }
                 
                 if let askPrice = json["iexAskPrice"].string {
-                    debugPrint(askPrice)
+                    //debugPrint(askPrice)
                 } else { }
                 
                 if let bidPrice = json["iexBidPrice"].string {
-                    debugPrint(bidPrice)
+                    //debugPrint(bidPrice)
                 } else { }
                 
                 // ISSUE: bid and ask price are generally null values so need to make a catch to set it as 0 if == to null or a value
