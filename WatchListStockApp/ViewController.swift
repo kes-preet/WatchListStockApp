@@ -10,38 +10,29 @@ import SwiftyJSON
 import Alamofire
 import RealmSwift
 
-//Current Issues:
-
-// - need to figure out a way to prevent repeated entries into my realm DB
-// - need to find a clean way to display these entries onto my app
-// What I need to do tommorow:
-
-//  - Handle the issue with repeated entries
-//  - Display a predetermined  list of tickers
-
-// - Future needs
-// - ensure tickers updated on 5 minute basis
-// - ensure that data is handled locally until update time at which updates if can access new date otherwise retain current data
-
 
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let realm = try! Realm()
-    var Tickers = ["AAPL","AMZN","GOOG"].sorted()
+    
+    var ActiveWatchList: [String]?
     var quotes: Results<Quote>?
     var timer: Timer?
     
-    
+    @IBOutlet weak var titleTextWatchList: UILabel!
     @IBOutlet var tableView: UITableView!
-    let myData = ["First","second","third","fourth"]
     
-    
-    let myListName = "myListName"
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        print("Realm is located at:", self.realm.configuration.fileURL!)
+
+    
+        
+//        debugPrint(self.ActiveWatchList)
+
+
         let nib = UINib(nibName: "CustomTableViewCell", bundle: nil)
         
         tableView.register(nib, forCellReuseIdentifier: "CustomTableViewCell")
@@ -49,22 +40,33 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.delegate = self
         tableView.dataSource = self
    
+        refreshActiveWatchlist()
 
         refreshData()
         
+    }
+    
+    public func refreshActiveWatchlist() {
         
-//        for ticker in Tickers
-//        {
-//            getData(tickerSymbol: ticker)
-//            realm.refresh()
-//        }
+        let currentWatchList = self.realm.objects(WatchList.self).filter("isActive == true").first
+     //   debugPrint(currentWatchList)
+        self.ActiveWatchList = currentWatchList?.Tickers?.components(separatedBy: ",").compactMap {String($0)}
+
+        //TODO: NEED TO FIGURE OUT WAY TO RENAME THE TITLE THAT DOESNT RESULT IN NIL OPTIONAL CRASH
         
-//        quotes = realm.objects(Quote.self).sorted(byKeyPath: "id")
-//
-//        tableView.reloadData()
- 
+        let data = self.realm.objects(Quote.self)
         
+        try! self.realm.write {
+         
+            self.realm.delete(data)
+        }
+        for ticker in self.ActiveWatchList!
+        {
+            self.getData(tickerSymbol: ticker)
+            self.realm.refresh()
+        }
         
+        //TODO: TABLE VIEW SLOW TO THE REFRESH CURRENTLY THE REALM DATA IS SET BUT NEED TO FOR TIMER REFRESH CALL FOR CHANGES TO APPLY IF POSSIBLE WANT INSTANT REFRESH
     }
     
     @IBAction func addStockButton(_ sender: UIButton) {
@@ -72,33 +74,32 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         present(vc, animated: true)
     }
     
+    @IBAction func manageWatchListsButton(_ sender: UIButton) {
+        guard let vc = storyboard?.instantiateViewController(withIdentifier: "watch_vc") as? WatchListViewController else { return }
+        present(vc,animated: true)
+        
+    }
+    
+ 
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return quotes!.count
+        return quotes?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            
-            
-        
-//
-//            try! self.realm.write {
-//                self.realm.delete(self.realm.objects(Quote.self).filter(quotes![indexPath.row].id))
-//                self.realm.refresh()
-//            }
-//
-              Tickers.remove(at: indexPath.row)
-//
-              debugPrint(Tickers)
-//
+
+            self.ActiveWatchList?.remove(at: indexPath.row)
+         //   debugPrint(self.ActiveWatchList ?? "ERROR")
             
             let data = self.realm.object(ofType: Quote.self, forPrimaryKey: self.quotes![indexPath.row].id)
+     
             
             try! self.realm.write {
              
                 self.realm.delete(data!)
             }
-            for ticker in Tickers
+            for ticker in ActiveWatchList!
             {
                 self.getData(tickerSymbol: ticker)
                 self.realm.refresh()
@@ -107,21 +108,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             self.quotes = self.realm.objects(Quote.self).sorted(byKeyPath: "id")
             
-            debugPrint(self.quotes?.count)
-            
-            //tableView.deleteRows(at: [indexPath], with: .fade)
+        //    debugPrint(self.quotes?.count)
             tableView.reloadData()
             
             
         } else if editingStyle == .insert
         {
-            //todo
+            
         }
-    } // TODO: delete button is there but the functionaility is missing
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell", for: indexPath) as! CustomTableViewCell
-        //let string = quotes![indexPath.row].name + "     " + quotes![indexPath.row].id +  "        " + String(quotes![indexPath.row].lastPrice)
+  
 
         let nameString = quotes![indexPath.row].name
         let symbolText = quotes![indexPath.row].id
@@ -140,9 +139,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func refreshData()
     {
+        
         func repeatThis()
         {
-            for ticker in self.Tickers
+            
+            for ticker in self.ActiveWatchList!
             {
                 self.getData(tickerSymbol: ticker)
                 self.realm.refresh()
@@ -169,27 +170,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             case .success(let value):
                 let json = JSON(value)
                 
-                //debugPrint(json)
-                
-                if let companyName = json["companyName"].string {
-                  //  debugPrint(companyName)
-                } else { return }
-                
-                if let latestPrice = json["latestPrice"].string {
-                    //debugPrint(latestPrice)
-                } else {  }
-                
-                if let askPrice = json["iexAskPrice"].string {
-                    //debugPrint(askPrice)
-                } else { }
-                
-                if let bidPrice = json["iexBidPrice"].string {
-                    //debugPrint(bidPrice)
-                } else { }
-                
-                // ISSUE: bid and ask price are generally null values so need to make a catch to set it as 0 if == to null or a value
- 
-             
                 
                 try! self.realm.write {
                  
@@ -197,10 +177,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                   
                     
                 }
-                
-                
-                
-                
+
             case .failure(let error):
                 print(error)
                 
@@ -218,12 +195,17 @@ class Quote: Object {
     @objc dynamic var askPrice = 0.0
     @objc dynamic var bidPrice = 0.0
     
-    //need to Program
-    //bid
-    //ask
-    
     override class func primaryKey() -> String? {
         return "id"
     }
+}
+
+class WatchList: Object {
+    @objc dynamic var Tickers: String? = nil
+    @objc dynamic var name = ""
+    @objc dynamic var isActive = false
+    
+    
+    
 }
 

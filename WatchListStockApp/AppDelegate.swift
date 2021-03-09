@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import RealmSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,6 +16,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let hasLaunchedKey = "HasLaunched"
+        let defaults = UserDefaults.standard
+        let hasLaunched = defaults.bool(forKey: hasLaunchedKey)
+        let realm = try! Realm()
+       
+        
+        if !hasLaunched {
+            defaults.set(true,forKey: hasLaunchedKey)
+            let defaultWatchList = WatchList()
+            defaultWatchList.Tickers = ["AAPL","MSFT","GOOG"].sorted().map {String(describing: $0) }.joined(separator: ",")
+            defaultWatchList.name = "Default WatchList"
+            defaultWatchList.isActive = true
+            
+            try! realm.write{
+                realm.add(defaultWatchList)
+            }
+            
+        }
         
         
         return true

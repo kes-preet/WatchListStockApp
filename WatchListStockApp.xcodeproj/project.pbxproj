@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		7D0B61E325F6FF43003849D2 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0B61E225F6FF43003849D2 /* SearchViewController.swift */; };
+		7D0B61E825F8181C003849D2 /* WatchListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0B61E725F8181C003849D2 /* WatchListViewController.swift */; };
+		7D0B61EE25F81E61003849D2 /* WatchListTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0B61EC25F81E61003849D2 /* WatchListTableCell.swift */; };
+		7D0B61EF25F81E61003849D2 /* WatchListTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D0B61ED25F81E61003849D2 /* WatchListTableCell.xib */; };
 		7D2577B525F302C500E298BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2577B425F302C500E298BD /* AppDelegate.swift */; };
 		7D2577B725F302C500E298BD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2577B625F302C500E298BD /* SceneDelegate.swift */; };
 		7D2577B925F302C500E298BD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2577B825F302C500E298BD /* ViewController.swift */; };
@@ -43,6 +46,9 @@
 		2E7881B3F575F8FBDB572224 /* Pods_WatchListStockApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WatchListStockApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		35502458D95B575E08F14E00 /* Pods-WatchListStockApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WatchListStockApp.release.xcconfig"; path = "Target Support Files/Pods-WatchListStockApp/Pods-WatchListStockApp.release.xcconfig"; sourceTree = "<group>"; };
 		7D0B61E225F6FF43003849D2 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		7D0B61E725F8181C003849D2 /* WatchListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchListViewController.swift; sourceTree = "<group>"; };
+		7D0B61EC25F81E61003849D2 /* WatchListTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchListTableCell.swift; sourceTree = "<group>"; };
+		7D0B61ED25F81E61003849D2 /* WatchListTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WatchListTableCell.xib; sourceTree = "<group>"; };
 		7D2577B125F302C500E298BD /* WatchListStockApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchListStockApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D2577B425F302C500E298BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7D2577B625F302C500E298BD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -125,6 +131,9 @@
 				7D2577FC25F57A7100E298BD /* CustomTableViewCell.swift */,
 				7D2577FD25F57A7100E298BD /* CustomTableViewCell.xib */,
 				7D0B61E225F6FF43003849D2 /* SearchViewController.swift */,
+				7D0B61E725F8181C003849D2 /* WatchListViewController.swift */,
+				7D0B61EC25F81E61003849D2 /* WatchListTableCell.swift */,
+				7D0B61ED25F81E61003849D2 /* WatchListTableCell.xib */,
 			);
 			path = WatchListStockApp;
 			sourceTree = "<group>";
@@ -271,6 +280,7 @@
 			files = (
 				7D2577C425F302C700E298BD /* LaunchScreen.storyboard in Resources */,
 				7D2577C125F302C700E298BD /* Assets.xcassets in Resources */,
+				7D0B61EF25F81E61003849D2 /* WatchListTableCell.xib in Resources */,
 				7D2577FF25F57A7100E298BD /* CustomTableViewCell.xib in Resources */,
 				7D2577BC25F302C500E298BD /* Main.storyboard in Resources */,
 			);
@@ -343,7 +353,9 @@
 				7D2577B925F302C500E298BD /* ViewController.swift in Sources */,
 				7D2577FE25F57A7100E298BD /* CustomTableViewCell.swift in Sources */,
 				7D2577B525F302C500E298BD /* AppDelegate.swift in Sources */,
+				7D0B61E825F8181C003849D2 /* WatchListViewController.swift in Sources */,
 				7D2577BF25F302C500E298BD /* WatchListStockApp.xcdatamodeld in Sources */,
+				7D0B61EE25F81E61003849D2 /* WatchListTableCell.swift in Sources */,
 				7D2577B725F302C500E298BD /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
