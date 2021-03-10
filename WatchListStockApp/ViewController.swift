@@ -126,7 +126,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBAction func manageWatchListsButton(_ sender: UIButton) {
         guard let vc = storyboard?.instantiateViewController(withIdentifier: "watch_vc") as? WatchListViewController else { return }
-        vc.delegate  = self
+        vc.delegate  = self 
         present(vc,animated: true)
         
     }
@@ -346,7 +346,9 @@ class WatchList: Object {
     @objc dynamic var name = ""
     @objc dynamic var isActive = false
     
-    
+    override class func primaryKey() -> String? {
+        return "name"
+    }
     
 }
 

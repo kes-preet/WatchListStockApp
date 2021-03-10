@@ -13,6 +13,8 @@ class WatchListTableCell: UITableViewCell {
 
     var delegate: refreshViewController?
     
+    var secondDelegate: WatchListProtocols?
+    
     static let identifier = "WatchListTableCell"
     
     let realm = try! Realm()
@@ -22,6 +24,8 @@ class WatchListTableCell: UITableViewCell {
     }
     
     @IBOutlet var button: UIButton!
+    
+    @IBOutlet var activeIcon: UIImageView!
     
    //TODO: Get the functionality to work where i can dismiss on click of a watchlist
     
@@ -47,7 +51,13 @@ class WatchListTableCell: UITableViewCell {
               //  ViewController().refreshActiveWatchlist() // THis is a new instance of the view controller so data not edidted properly
                 self.delegate?.refreshActiveWatchlist()
             }
+            
+            self.secondDelegate?.dismissView()
+
+            
         }
+        
+        
         
         
         
