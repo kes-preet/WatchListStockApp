@@ -13,6 +13,7 @@ import RealmSwift
 
 protocol refreshViewController {
     func refreshActiveWatchlist()
+    func addNewTicker(ticker:String)
 }
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, refreshViewController {
@@ -54,6 +55,30 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //proper removal hapening in deletion but not in switching?
     
+    public func addNewTicker(ticker:String) {
+        
+        if ((self.ActiveWatchList?.contains(ticker)) == true)
+        {
+            return
+        }
+        else {
+            self.ActiveWatchList?.append(ticker)
+            
+            self.ActiveWatchList?.sort()
+            
+           // self.quotes = self.realm.objects(Quote.self).sorted(byKeyPath: "id")
+            
+            let modifyWatchList = self.realm.objects(WatchList.self).filter("isActive == true").first
+            
+            
+
+            try! self.realm.write {
+                modifyWatchList?.Tickers = self.ActiveWatchList?.sorted().map {String(describing: $0) }.joined(separator: ",")
+            }
+        }
+       
+    }
+    
     public func refreshActiveWatchlist() {
         
         
@@ -80,11 +105,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         
         print(self.ActiveWatchList)
-        for ticker in self.ActiveWatchList!
-        {
-            self.getData(tickerSymbol: ticker)
-            self.realm.refresh()
-        }
+        
+        self.getBatchData(tickers: self.ActiveWatchList!)
+        self.realm.refresh()
+//        for ticker in self.ActiveWatchList!
+//        {
+//            self.getData(tickerSymbol: ticker)
+//            self.realm.refresh()
+//        }
         
         
         //TODO: TABLE VIEW SLOW TO THE REFRESH CURRENTLY THE REALM DATA IS SET BUT NEED TO FOR TIMER REFRESH CALL FOR CHANGES TO APPLY IF POSSIBLE WANT INSTANT REFRESH
@@ -92,6 +120,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBAction func addStockButton(_ sender: UIButton) {
         guard let vc = storyboard?.instantiateViewController(withIdentifier: "search_vc") as? SearchViewController else { return }
+        vc.delegate = self
         present(vc, animated: true)
     }
     
@@ -121,12 +150,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
              
                 self.realm.delete(data!)
             }
-            for ticker in self.ActiveWatchList!
-            {
-                self.getData(tickerSymbol: ticker)
-                self.realm.refresh()
-            }
             
+            self.getBatchData(tickers: self.ActiveWatchList!)
+            self.realm.refresh()
+//            for ticker in self.ActiveWatchList!
+//            {
+//                self.getData(tickerSymbol: ticker)
+//                self.realm.refresh()
+//            }
+//
             
             self.quotes = self.realm.objects(Quote.self).sorted(byKeyPath: "id")
             
@@ -148,7 +180,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             debugPrint(self.ActiveWatchList)
         //    debugPrint(self.quotes?.count)
-            tableView.reloadData()
+            self.tableView.reloadData()
             
             
         } else if editingStyle == .insert
@@ -170,9 +202,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.myLabel.text = nameString + "  " + symbolText
         cell.myImageView.backgroundColor = .green
         cell.myPriceLabel.text = String(lastPriceText)
-        cell.myAskPriceLabel.text = String(askPriceText)
-        cell.myBidPriceLabel.text = String(bidPriceText)
         
+        if askPriceText == 0.0
+        {
+            cell.myAskPriceLabel.text = "N/A"
+        }
+        else
+        {
+            cell.myAskPriceLabel.text = String(askPriceText)
+        }
+        
+        if bidPriceText == 0.0
+        {
+            cell.myBidPriceLabel.text = "N/A"
+        }
+        else
+        {
+            cell.myBidPriceLabel.text = String(bidPriceText)
+        }
+   
+       
         return cell
     }
     
@@ -182,14 +231,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         func repeatThis(watchList:[String])
         {
            // debugPrint(watchList)
+            debugPrint(watchList) // THE GIVE WATCH LIST IS SIZE 4 SO YOU WOULD ASSUME FOUR TICKERS GO THROUGH
+//
+            self.getBatchData(tickers: watchList)
+            self.realm.refresh()
+            //for ticker in watchList
+//            {
+//               // debugPrint(ticker)
+//                self.getData(tickerSymbol: ticker)
+//                self.realm.refresh()
+//            }
             
-            for ticker in watchList
-            {
-                self.getData(tickerSymbol: ticker)
-                self.realm.refresh()
-            }
+            self.quotes = realm.objects(Quote.self).sorted(byKeyPath: "id") // QUOTES HOWEVER ENDS UP WITH 3
             
-            self.quotes = realm.objects(Quote.self).sorted(byKeyPath: "id")
+            debugPrint(self.quotes?.count)
             
             self.tableView.reloadData()
         }
@@ -197,7 +252,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         repeatThis(watchList: self.ActiveWatchList!)
 
         self.timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true, block: { (timer) in
-            debugPrint(self.ActiveWatchList!)
+            
+           
             repeatThis(watchList: self.ActiveWatchList!)
         })
     }
@@ -205,8 +261,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func getData(tickerSymbol: String)
     {
 
-        
-        AF.request("https://sandbox.iexapis.com/stable/stock/\(tickerSymbol)/quote?token=Tpk_f4da85ac85c8471da814382d612cfdf9").responseJSON { response in
+       // debugPrint(tickerSymbol)
+        AF.request("https://sandbox.iexapis.com/stable/stock/\(tickerSymbol)/quote?token=Tpk_f4da85ac85c8471da814382d612cfdf9",method: .get,encoding: JSONEncoding.default).responseJSON { response in
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
@@ -220,10 +276,54 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 }
 
             case .failure(let error):
+                print(tickerSymbol)
                 print(error)
                 
             }
         }
+    }
+    
+    func getBatchData(tickers:[String])
+    {
+        let tickersJoined = tickers.sorted().map {String(describing: $0) }.joined(separator: ",")
+        
+        if tickersJoined == ""
+        {
+            return
+        }
+        
+        AF.request("https://sandbox.iexapis.com/stable/stock/market/batch?symbols=\(tickersJoined)&types=quote,news,chart&range=1m&last=5&token=Tsk_80f9ac6b9d784e00a0a5e5935bc52d5e").responseJSON { response in
+            switch response.result {
+            case .success(let value):
+                let json = JSON(value)
+                
+                //print(json)
+                
+                for ticker in tickers
+                {
+                    let jsonQuote = json[ticker]["quote"]
+                    try! self.realm.write {
+                     
+                        self.realm.create(Quote.self,value:[
+                                            "id":jsonQuote["symbol"].string!  ,
+                                            "name": jsonQuote["companyName"].string! ,
+                                            "lastPrice": jsonQuote["latestPrice"].double!,
+                                            "askPrice": jsonQuote["iexAskPrice"].double ?? 0,
+                                            "bidPrice": jsonQuote["iexBidPrice"].double ?? 0
+                                            ],
+                
+                                          update: .all)
+                      
+                        
+                    }
+                }
+                
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
+        
     }
     
 

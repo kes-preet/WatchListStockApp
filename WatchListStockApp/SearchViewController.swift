@@ -11,7 +11,7 @@ import SwiftyJSON
 
 
 class SearchViewController: UIViewController , UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate{
-    
+    var delegate: refreshViewController?
     
     @IBOutlet weak var SearchBar: UITextField!
     @IBOutlet weak var SymbolList: UITableView!
@@ -145,6 +145,13 @@ class SearchViewController: UIViewController , UITableViewDataSource, UITableVie
         }
         cell?.textLabel?.text = subSectionSymbolGroup[indexPath.row]
         return cell!
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        debugPrint(subSectionSymbolGroup[indexPath.row])
+        
+        self.delegate?.addNewTicker(ticker: subSectionSymbolGroup[indexPath.row])
+        
     }
 
     override func didReceiveMemoryWarning() {
