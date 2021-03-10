@@ -11,6 +11,8 @@ import RealmSwift
 
 class WatchListTableCell: UITableViewCell {
 
+    var delegate: refreshViewController?
+    
     static let identifier = "WatchListTableCell"
     
     let realm = try! Realm()
@@ -42,7 +44,8 @@ class WatchListTableCell: UITableViewCell {
                 {
                     setActiveWatchList!.isActive = true
                 }
-                ViewController().refreshActiveWatchlist()
+              //  ViewController().refreshActiveWatchlist() // THis is a new instance of the view controller so data not edidted properly
+                self.delegate?.refreshActiveWatchlist()
             }
         }
         

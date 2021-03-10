@@ -23,15 +23,20 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="75"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="WatchList Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cKl-NN-VO8">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="WatchList Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cKl-NN-VO8">
                                             <rect key="frame" x="8" y="21" width="398" height="32"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstItem="cKl-NN-VO8" firstAttribute="trailing" secondItem="Xa6-M4-Xel" secondAttribute="trailingMargin" id="8yA-Wy-Phl"/>
+                                        <constraint firstItem="cKl-NN-VO8" firstAttribute="leading" secondItem="Xa6-M4-Xel" secondAttribute="leadingMargin" id="AfZ-J6-5nB"/>
+                                        <constraint firstItem="cKl-NN-VO8" firstAttribute="top" secondItem="Xa6-M4-Xel" secondAttribute="top" constant="21" id="WT1-qg-Y0I"/>
+                                        <constraint firstItem="cKl-NN-VO8" firstAttribute="centerY" secondItem="Xa6-M4-Xel" secondAttribute="centerY" id="ltY-rl-KGa"/>
+                                    </constraints>
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="0y1-ro-N7X">

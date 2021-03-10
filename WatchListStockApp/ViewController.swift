@@ -11,12 +11,17 @@ import Alamofire
 import RealmSwift
 
 
+protocol refreshViewController {
+    func refreshActiveWatchlist()
+}
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, refreshViewController {
 
     let realm = try! Realm()
     
     var ActiveWatchList: [String]?
+    
+    var ActiveWatchListName: String = "DEFAULT"
     var quotes: Results<Quote>?
     var timer: Timer?
     
@@ -26,12 +31,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("Realm is located at:", self.realm.configuration.fileURL!)
+       print("Realm is located at:", self.realm.configuration.fileURL!)
 
     
         
 //        debugPrint(self.ActiveWatchList)
 
+        titleTextWatchList.text = ActiveWatchListName
 
         let nib = UINib(nibName: "CustomTableViewCell", bundle: nil)
         
@@ -46,13 +52,25 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
+    //proper removal hapening in deletion but not in switching?
+    
     public func refreshActiveWatchlist() {
         
+        
+        
         let currentWatchList = self.realm.objects(WatchList.self).filter("isActive == true").first
+        print(currentWatchList)
      //   debugPrint(currentWatchList)
-        self.ActiveWatchList = currentWatchList?.Tickers?.components(separatedBy: ",").compactMap {String($0)}
-
+        
+        
+       self.ActiveWatchList = currentWatchList?.Tickers?.components(separatedBy: ",").compactMap {String($0)}
+       // self.ActiveWatchList = ["GOOG"]
+       // print(self.ActiveWatchList)
         //TODO: NEED TO FIGURE OUT WAY TO RENAME THE TITLE THAT DOESNT RESULT IN NIL OPTIONAL CRASH
+        
+        
+      
+        //self.titleTextWatchList.text = self.ActiveWatchListName
         
         let data = self.realm.objects(Quote.self)
         
@@ -60,11 +78,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
          
             self.realm.delete(data)
         }
+        
+        print(self.ActiveWatchList)
         for ticker in self.ActiveWatchList!
         {
             self.getData(tickerSymbol: ticker)
             self.realm.refresh()
         }
+        
         
         //TODO: TABLE VIEW SLOW TO THE REFRESH CURRENTLY THE REALM DATA IS SET BUT NEED TO FOR TIMER REFRESH CALL FOR CHANGES TO APPLY IF POSSIBLE WANT INSTANT REFRESH
     }
@@ -76,6 +97,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBAction func manageWatchListsButton(_ sender: UIButton) {
         guard let vc = storyboard?.instantiateViewController(withIdentifier: "watch_vc") as? WatchListViewController else { return }
+        vc.delegate  = self
         present(vc,animated: true)
         
     }
@@ -89,7 +111,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
 
-            self.ActiveWatchList?.remove(at: indexPath.row)
+           self.ActiveWatchList?.remove(at: indexPath.row)
          //   debugPrint(self.ActiveWatchList ?? "ERROR")
             
             let data = self.realm.object(ofType: Quote.self, forPrimaryKey: self.quotes![indexPath.row].id)
@@ -99,7 +121,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
              
                 self.realm.delete(data!)
             }
-            for ticker in ActiveWatchList!
+            for ticker in self.ActiveWatchList!
             {
                 self.getData(tickerSymbol: ticker)
                 self.realm.refresh()
@@ -108,6 +130,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             self.quotes = self.realm.objects(Quote.self).sorted(byKeyPath: "id")
             
+            let modifyWatchList = self.realm.objects(WatchList.self).filter("isActive == true").first
+            
+            
+
+            try! self.realm.write {
+                modifyWatchList?.Tickers = self.ActiveWatchList?.sorted().map {String(describing: $0) }.joined(separator: ",")
+            }
+            
+            self.refreshActiveWatchlist()
+//
+//            self.timer?.invalidate()
+//
+//            self.refreshData()
+//
+            
+            
+            debugPrint(self.ActiveWatchList)
         //    debugPrint(self.quotes?.count)
             tableView.reloadData()
             
@@ -140,10 +179,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func refreshData()
     {
         
-        func repeatThis()
+        func repeatThis(watchList:[String])
         {
+           // debugPrint(watchList)
             
-            for ticker in self.ActiveWatchList!
+            for ticker in watchList
             {
                 self.getData(tickerSymbol: ticker)
                 self.realm.refresh()
@@ -154,10 +194,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.tableView.reloadData()
         }
         
-        repeatThis()
+        repeatThis(watchList: self.ActiveWatchList!)
 
         self.timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true, block: { (timer) in
-            repeatThis()
+            debugPrint(self.ActiveWatchList!)
+            repeatThis(watchList: self.ActiveWatchList!)
         })
     }
 

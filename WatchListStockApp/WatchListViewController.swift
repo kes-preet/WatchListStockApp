@@ -9,6 +9,8 @@ import UIKit
 import RealmSwift
 
 class WatchListViewController: UIViewController ,UITableViewDataSource,UITableViewDelegate{
+    
+    var delegate: refreshViewController?
 
     @IBOutlet weak var watchListTable: UITableView!
     
@@ -39,12 +41,14 @@ class WatchListViewController: UIViewController ,UITableViewDataSource,UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: WatchListTableCell.identifier) as! WatchListTableCell
+        cell.delegate = self.delegate
         if cell == nil {
             cell = UITableViewCell(style: .default,reuseIdentifier: WatchListTableCell.identifier) as! WatchListTableCell
         }
         
         let watchListName = watchLists![indexPath.row].name
-
+        
+        //cell.textLabel?.text = watchListName
         cell.button.setTitle(watchListName, for: .normal)
         
         
@@ -55,5 +59,7 @@ class WatchListViewController: UIViewController ,UITableViewDataSource,UITableVi
         super.didReceiveMemoryWarning()
     }
     
+    
+
 
 }
