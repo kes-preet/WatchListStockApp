@@ -35,4 +35,5 @@ pod 'ChartsRealm'
         - Make a tutorial to help illustrate the functions of the app
         - Make the refresh much cleaner and less clunky
         - fix internet connection disruption issues
+        - My Search uses the sandbox iexCloud link rather than the normal which offers similar functionality just doesn't use credits and is slower on uptake  unresolved JSON bug but doesn't affect MVP
        
