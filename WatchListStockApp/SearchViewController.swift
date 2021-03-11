@@ -16,30 +16,12 @@ class SearchViewController: UIViewController , UITableViewDataSource, UITableVie
     @IBOutlet weak var SearchBar: UITextField!
     @IBOutlet weak var SymbolList: UITableView!
     
-//    var sampleSubSection: [String] = Array()
-//    var fullSample: [String] = Array()
-    
     
     var subSectionSymbolGroup: [String] = Array()
-    var prevSubSectionSymbolGroup: [String] = Array() // may not need this
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//
-//        sampleSubSection.append("AARP")
-//        sampleSubSection.append("XEP")
-//        sampleSubSection.append("AWP")
-//        sampleSubSection.append("XXT")
-//        sampleSubSection.append("AYXE")
-//        sampleSubSection.append("AEET")
-//        sampleSubSection.append("AEE")
-//        sampleSubSection.append("AEEV")
-//
-//        for stub in sampleSubSection {
-//            fullSample.append(stub)
-//        }
+
         
         SymbolList.delegate = self
         SymbolList.dataSource = self
@@ -60,23 +42,15 @@ class SearchViewController: UIViewController , UITableViewDataSource, UITableVie
         
         
         if textField.text?.count != 0 {
-           // for stub in fullSample {
+
                 if let stubToSearch = textField.text {
-//                    let range = stub.lowercased().range(of: stubToSearch, options: .caseInsensitive, range: nil,locale: nil)
-                    
-                  //  let range = stub.hasPrefix(stubToSearch.uppercased())
+
                     
                     AF.request("https://sandbox.iexapis.com/stable//search/\(stubToSearch)?token=Tpk_f4da85ac85c8471da814382d612cfdf9").responseJSON {
                         response in switch response.result {
                         case .success(let value):
                             let json = JSON(value)
-                            
-                            
-                           // debugPrint(json)
-                            
-                          //  debugPrint(json.array)
-                            
-                            
+
                             
                             DispatchQueue.main.async {
                                 for ticker in json.arrayValue{
@@ -87,37 +61,19 @@ class SearchViewController: UIViewController , UITableViewDataSource, UITableVie
                                 self.SymbolList.reloadData()
                             }
                             
-                            
-                          
-//
-//
-//                            //self.prevSubSectionSymbolGroup = self.subSectionSymbolGroup
-//                            debugPrint("One: ")
-//                            debugPrint(self.subSectionSymbolGroup)
+        
                             
                         case .failure(let error):
                             print(error)
                             
                             
                         }
-                    
-                   // debugPrint("Two: ")
-                    //debugPrint(self.subSectionSymbolGroup)
+        
                     
                     }
-                    //debugPrint("Three: ")
-                    //debugPrint(self.subSectionSymbolGroup)
-                    
-                    
-                    //https://sandbox.iexapis.com/stable//search/tsl?token=Tpk_f4da85ac85c8471da814382d612cfdf9
-//
-//                    if range  {
-//                        self.sampleSubSection.append(stub)
-//                    }
-                    
+
                 }
-            //}
-//            debugPrint(sampleSubSection)
+
          
         }
         else {
@@ -125,11 +81,7 @@ class SearchViewController: UIViewController , UITableViewDataSource, UITableVie
             self.SymbolList.reloadData()
         }
         
-//        debugPrint("This Code has RUNNED")
-//
-//        debugPrint(textField.text?.count)
-//        debugPrint("Four: ")
-//        debugPrint(self.subSectionSymbolGroup)
+
        
     }
     
@@ -148,10 +100,12 @@ class SearchViewController: UIViewController , UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        debugPrint(subSectionSymbolGroup[indexPath.row])
-        
+
+       
         self.delegate?.addNewTicker(ticker: subSectionSymbolGroup[indexPath.row])
+        self.delegate?.refreshActiveWatchlist()
         
+        self.dismiss(animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {

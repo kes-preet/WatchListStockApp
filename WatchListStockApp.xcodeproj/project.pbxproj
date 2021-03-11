@@ -24,6 +24,7 @@
 		7D2577DA25F302C800E298BD /* WatchListStockAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2577D925F302C800E298BD /* WatchListStockAppUITests.swift */; };
 		7D2577FE25F57A7100E298BD /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2577FC25F57A7100E298BD /* CustomTableViewCell.swift */; };
 		7D2577FF25F57A7100E298BD /* CustomTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D2577FD25F57A7100E298BD /* CustomTableViewCell.xib */; };
+		7DD5AA9625F9C43500FE81C4 /* QuoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD5AA9525F9C43500FE81C4 /* QuoteViewController.swift */; };
 		FAA3DCA3F60C467DC9D74DCC /* Pods_WatchListStockApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7881B3F575F8FBDB572224 /* Pods_WatchListStockApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +71,7 @@
 		7D2577DB25F302C800E298BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7D2577FC25F57A7100E298BD /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		7D2577FD25F57A7100E298BD /* CustomTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomTableViewCell.xib; sourceTree = "<group>"; };
+		7DD5AA9525F9C43500FE81C4 /* QuoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteViewController.swift; sourceTree = "<group>"; };
 		8933E972C3AFDA80D8E3C172 /* Pods-WatchListStockApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WatchListStockApp.debug.xcconfig"; path = "Target Support Files/Pods-WatchListStockApp/Pods-WatchListStockApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -140,6 +142,7 @@
 				7D0B61ED25F81E61003849D2 /* WatchListTableCell.xib */,
 				7D0B61F825F8664B003849D2 /* SearchViewTableCell.swift */,
 				7D0B61F925F8664B003849D2 /* SearchViewTableCell.xib */,
+				7DD5AA9525F9C43500FE81C4 /* QuoteViewController.swift */,
 			);
 			path = WatchListStockApp;
 			sourceTree = "<group>";
@@ -365,6 +368,7 @@
 				7D2577BF25F302C500E298BD /* WatchListStockApp.xcdatamodeld in Sources */,
 				7D0B61EE25F81E61003849D2 /* WatchListTableCell.swift in Sources */,
 				7D2577B725F302C500E298BD /* SceneDelegate.swift in Sources */,
+				7DD5AA9625F9C43500FE81C4 /* QuoteViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

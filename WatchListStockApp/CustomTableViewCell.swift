@@ -14,11 +14,14 @@ class CustomTableViewCell: UITableViewCell {
     @IBOutlet var myPriceLabel: UILabel!
     @IBOutlet var myAskPriceLabel: UILabel!
     @IBOutlet var myBidPriceLabel: UILabel!
+    @IBOutlet weak var myNameLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
+    
+
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

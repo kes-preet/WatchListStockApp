@@ -24,6 +24,9 @@ class WatchListTableCell: UITableViewCell {
     }
     
     @IBOutlet var button: UIButton!
+    @IBOutlet weak var WatchListName: UILabel!
+    
+    @IBOutlet weak var WatchListContents: UILabel!
     
     @IBOutlet var activeIcon: UIImageView!
     
@@ -31,7 +34,7 @@ class WatchListTableCell: UITableViewCell {
     
     @IBAction func didTapButton()
     {
-        let watchListName = button.titleLabel?.text
+        let watchListName = WatchListName.text
         
         DispatchQueue.main.async {
             autoreleasepool

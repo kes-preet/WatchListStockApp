@@ -22,8 +22,19 @@ class WatchListViewController: UIViewController ,UITableViewDataSource,UITableVi
     
     let realm = try! Realm()
     
+    let alert = UIAlertController(title: "New Watchlist", message: "Please enter a valid name",preferredStyle: .alert)
+    
+    var newWatchListName: String?
+    
+    
     
     var watchLists: Results<WatchList>?
+    
+    //TODO: ensure repeated names not useed
+    
+    //TODO: ensure a name is inputted
+    
+    //TODO: polish this code in general
     
     
     override func viewDidLoad() {
@@ -36,6 +47,38 @@ class WatchListViewController: UIViewController ,UITableViewDataSource,UITableVi
         
         self.watchLists = self.realm.objects(WatchList.self).sorted(byKeyPath: "name")
         
+        
+        self.alert.addTextField { (textField) in
+            textField.placeholder = "name here"
+        
+        }
+        
+        self.alert.addAction(UIAlertAction(title: "Submit", style: .default, handler: { [weak alert] (_) in
+            
+            let textField = alert?.textFields?[0]
+
+            
+            let watchLists = self.realm.objects(WatchList.self)
+            
+            try! self.realm.write
+            {
+                watchLists.setValue(false, forKey: "isActive")
+
+            }
+            
+            
+            try! self.realm.write {
+                
+                
+            
+
+                self.realm.create(WatchList.self, value: ["name": textField?.text,"Tickers":"AAPL,GOOG,MSFT","isActive":true], update: .all)
+
+            }
+            
+            self.delegate?.refreshActiveWatchlist()
+            self.dismissView()
+        }))
         
         
         // Do any additional setup after loading the view.
@@ -51,11 +94,14 @@ class WatchListViewController: UIViewController ,UITableViewDataSource,UITableVi
     @IBAction func addNewWatchList(_ sender: UIButton) {
         
         
+        self.present(alert, animated: true, completion: nil)
+        
+  
         
         
         
         
-        dismissView()
+        
     }
     
     
@@ -80,7 +126,9 @@ class WatchListViewController: UIViewController ,UITableViewDataSource,UITableVi
         let watchListName = watchLists![indexPath.row].name
         
         //cell.textLabel?.text = watchListName
-        cell.button.setTitle(watchListName, for: .normal)
+       // cell.button.setTitle(watchListName, for: .normal)
+        cell.WatchListName.text = watchListName
+        cell.WatchListContents.text = watchLists![indexPath.row].Tickers
         
         if watchLists![indexPath.row].isActive == false {
             cell.activeIcon.alpha = 0.0
