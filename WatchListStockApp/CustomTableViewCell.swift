@@ -7,8 +7,10 @@
 
 import UIKit
 
+//Custom Table View Cell Class
 class CustomTableViewCell: UITableViewCell {
 
+    //Outlets
     @IBOutlet var myLabel: UILabel!
     @IBOutlet var myImageView: UIImageView!
     @IBOutlet var myPriceLabel: UILabel!
@@ -18,15 +20,11 @@ class CustomTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
     
 
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
-    
 }

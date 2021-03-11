@@ -23,15 +23,13 @@ class WatchListTableCell: UITableViewCell {
         return UINib(nibName: identifier, bundle: nil)
     }
     
+    //IB Outlets
     @IBOutlet var button: UIButton!
     @IBOutlet weak var WatchListName: UILabel!
-    
     @IBOutlet weak var WatchListContents: UILabel!
-    
     @IBOutlet var activeIcon: UIImageView!
     
-   //TODO: Get the functionality to work where i can dismiss on click of a watchlist
-    
+    // Unactive current watchlist and reactivate selected watchlist to swap betweeen and dismiss view using prior protocol function
     @IBAction func didTapButton()
     {
         let watchListName = WatchListName.text
@@ -47,26 +45,15 @@ class WatchListTableCell: UITableViewCell {
                 
                 let setActiveWatchList = self.realm.objects(WatchList.self).filter("name contains '\(watchListName!)'").first
                 
-                try! self.realm.write
-                {
+                try! self.realm.write{
                     setActiveWatchList!.isActive = true
                 }
-              //  ViewController().refreshActiveWatchlist() // THis is a new instance of the view controller so data not edidted properly
                 self.delegate?.refreshActiveWatchlist()
             }
             
             self.secondDelegate?.dismissView()
-
-            
         }
-        
-        
-        
-        
-        
     }
-    
-
     
     override func awakeFromNib() {
         super.awakeFromNib()

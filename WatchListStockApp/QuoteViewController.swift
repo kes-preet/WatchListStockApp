@@ -15,33 +15,18 @@ import Charts
 
 class QuoteViewController: UIViewController ,ChartViewDelegate {
 
+    //IB Outlets
     @IBOutlet weak var stockySymbolLabel: UILabel!
     @IBOutlet weak var stockNameLabel: UILabel!
     @IBOutlet weak var stockPriceLabel: UILabel!
-    
     @IBOutlet weak var stockBidLabel: UILabel!
     @IBOutlet weak var stockAskLabel: UILabel!
     
     var lineChart = LineChartView()
-    
-    
     var quote: Quote?
     let realm = try! Realm()
-    
-    //Complete: implement the updating from the view controller
-    
-    //COmplete: get iex api chart information
-    //COMPLETE: take that chart information grab the date,
-    //COMPLETE: calculate average price (open + close)/2
-    //COMPLETE: take these and store them in some sort of array with values for each day
-        // - will need some adjustment and filler
-    //TODO: use chart library to create the chart for it
-    
+
     var chartDataDictionary: [String: Double] = [:]
-    var developedChartDataDict: [Date:Double] = [:]
- 
-    
-    
     var timer:Timer?
     
     
@@ -49,76 +34,62 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-       
-        
-        
 
+        // Symbol label
         self.stockySymbolLabel.text = quote?.id
         
+        //Bid and ask if 0.0 just set to N/A
         if quote!.bidPrice == 0.0 {
             self.stockBidLabel.text = "N/A"
         } else {
             self.stockBidLabel.text =  quote!.bidPrice.dollarString
         }
-        
         if quote!.askPrice == 0.0 {
             self.stockAskLabel.text = "N/A"
         } else {
             self.stockAskLabel.text =  quote!.askPrice.dollarString
         }
         
+        //Name
         self.stockNameLabel.text = quote?.name
+        
+        //latest Price
         self.stockPriceLabel.text =  quote!.lastPrice.dollarString
         
+        // Preparing the chart Data
         self.getLastMonthDates()
         self.getData(tickerSymbol: quote!.id)
-       // self.prepLibraryForDateSorting()
       
         
         lineChart.delegate = self
       
-        
+        // Refresh timer to obtain new data every 5 seconds
         self.timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true, block: { (timer) in
             self.updatePriceLabels()
-            //print("ticking")
-           // self.lineChart.notifyDataSetChanged()
-           // print(self.developedChartDataDict)
-            
             
         })
-
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-  
-        
-        
-        
-        
+        // Prepping Line Chart
         lineChart.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width - 20, height: self.view.frame.size.width - 20)
         lineChart.extraTopOffset = 150
         lineChart.legend.enabled = false
         lineChart.xAxis.enabled = false
         lineChart.isUserInteractionEnabled = false
         
-    
         view.addSubview(lineChart)
         
-
         var dateArray = [String]()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8){
        
         
             var entries = [ChartDataEntry]()
-        
-        
-       // print(self.chartDataDictionary)
-      
             var today = Date()
          
+            // Get the dates from the last 30 days
             for _ in 0...29{
                 let tomorrow = Calendar.current.date(byAdding: .day,value: -1, to: today)
                 let date = DateFormatter()
@@ -129,61 +100,35 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
                
                 
             }
-            //print(entries)
-            dateArray = dateArray.reversed()
+            dateArray = dateArray.reversed() // Reveresal needed to properly retrive data from chart Data Dictionary
             
+            // append entries with sorted chart data dictionary
             for x in 0...29 {
+                // if value not defined in chart data ignore and skip since is missing data from JSON
                 if self.chartDataDictionary[dateArray[x]] != 0.0 {
                     entries.append(ChartDataEntry(x: Double(x), y: Double(self.chartDataDictionary[dateArray[x]]!)))
                 }
             }
-            
-         
-          
-        
-            let set = LineChartDataSet(entries:entries)
-            //set.colors = ChartColorTemplates.init()
 
+            //defining data set values
+            let set = LineChartDataSet(entries:entries)
             set.setColor(.green)
-                
-        
-            
-            
             set.circleRadius = 0
             set.lineWidth = 5.0
+            
+            // add data to line chart object
             let data = LineChartData(dataSet: set)
             self.lineChart.data = data
         }
     }
     
+    // End timer if view dismissed
     override func viewDidDisappear(_ animated: Bool) {
         self.timer?.invalidate()
-       // print("Stopped the clock")
-        
-    }
-    
-    func prepLibraryForDateSorting()
-    {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        for (date,_) in self.chartDataDictionary {
-            
-            let convertedDate = dateFormatter.date(from: date)
-           
-            self.developedChartDataDict[convertedDate!] = self.chartDataDictionary[date]
-            
-        }
-        
-      //  let sortedKeys = Array(self.developedChartDataDict.keys).sorted(by: { $0.compare($1) == .orderedDescending })
 
-        
-       // debugPrint(self.chartDataDictionary)
-        //debugPrint(self.developedChartDataDict)
-       // debugPrint("HELLO")
-        
     }
-    
+
+    // Retrieve the string value of last 30 days storing in chart by default as 0.0
     func getLastMonthDates()
     {
         var today = Date()
@@ -200,7 +145,7 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
  
     }
     
-    
+    // Updating price label values
     func updatePriceLabels()
     {
         
@@ -221,7 +166,7 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
     }
     
      
-    
+    // Retrieve the chart data from iex Cloud API
     func getData(tickerSymbol: String)
     {
         AF.request("https://sandbox.iexapis.com/stable/stock/\(tickerSymbol)/chart?token=Tpk_f4da85ac85c8471da814382d612cfdf9",method: .get,encoding: JSONEncoding.default).responseJSON { response in
@@ -230,18 +175,16 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
                 let json = JSON(value)
 
 
-                
+                // For each availible quote historical data
                 for (_,subJson):(String,JSON) in json {
 
                     
                     let closeDouble = subJson["close"].double
                     let openDouble = subJson["open"].double
                     
-                    let averageHistorical = (openDouble! + closeDouble!)/2
+                    let averageHistorical = (openDouble! + closeDouble!)/2 // average price data from open and close of that day
                     
-               
-                    
-                    self.chartDataDictionary[subJson["date"].string!] = averageHistorical
+                    self.chartDataDictionary[subJson["date"].string!] = averageHistorical // set average with key of specific date from JSON
                     
                 }
             

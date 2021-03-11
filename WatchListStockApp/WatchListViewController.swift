@@ -14,28 +14,19 @@ protocol WatchListProtocols {
 
 class WatchListViewController: UIViewController ,UITableViewDataSource,UITableViewDelegate, WatchListProtocols{
     
+    //Delegate for ViewController protocol functions
     var delegate: refreshViewController?
 
+    //Outlets
     @IBOutlet weak var watchListTable: UITableView!
     
-    
-    
     let realm = try! Realm()
-    
+
+    // Alert object
     let alert = UIAlertController(title: "New Watchlist", message: "Please enter a valid name",preferredStyle: .alert)
     
     var newWatchListName: String?
-    
-    
-    
     var watchLists: Results<WatchList>?
-    
-    //TODO: ensure repeated names not useed
-    
-    //TODO: ensure a name is inputted
-    
-    //TODO: polish this code in general
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,65 +39,42 @@ class WatchListViewController: UIViewController ,UITableViewDataSource,UITableVi
         self.watchLists = self.realm.objects(WatchList.self).sorted(byKeyPath: "name")
         
         
+        // preparing alert object
         self.alert.addTextField { (textField) in
             textField.placeholder = "name here"
         
         }
         
+        // Take value from textfield and create new watchlist with default tickers giving the name offered by textfield entered in alert
         self.alert.addAction(UIAlertAction(title: "Submit", style: .default, handler: { [weak alert] (_) in
             
             let textField = alert?.textFields?[0]
-
-            
             let watchLists = self.realm.objects(WatchList.self)
             
-            try! self.realm.write
-            {
+            try! self.realm.write{
                 watchLists.setValue(false, forKey: "isActive")
-
             }
             
-            
             try! self.realm.write {
-                
-                
-            
-
                 self.realm.create(WatchList.self, value: ["name": textField?.text,"Tickers":"AAPL,GOOG,MSFT","isActive":true], update: .all)
-
             }
             
             self.delegate?.refreshActiveWatchlist()
             self.dismissView()
         }))
-        
-        
-        // Do any additional setup after loading the view.
     }
     
+
     
-    //TODO: create a new watchlist object and add it to the realm db
-    
-    //TODO: set this as the new active
-    
-    //COMPLETE: dismiss the view
-    
+    // New watchlist Button present the alert
     @IBAction func addNewWatchList(_ sender: UIButton) {
         
-        
         self.present(alert, animated: true, completion: nil)
-        
-  
-        
-        
-        
-        
-        
+
     }
     
-    
-    public func dismissView()
-    {
+    // Dismiss view helper function
+    public func dismissView(){
         dismiss(animated: true, completion: nil)
         
     }
@@ -115,21 +83,21 @@ class WatchListViewController: UIViewController ,UITableViewDataSource,UITableVi
         return watchLists!.count
     }
     
+    // Custom cell prepartion
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: WatchListTableCell.identifier) as! WatchListTableCell
         cell.delegate = self.delegate
         cell.secondDelegate = self
+        
         if cell == nil {
             cell = UITableViewCell(style: .default,reuseIdentifier: WatchListTableCell.identifier) as! WatchListTableCell
         }
         
         let watchListName = watchLists![indexPath.row].name
-        
-        //cell.textLabel?.text = watchListName
-       // cell.button.setTitle(watchListName, for: .normal)
         cell.WatchListName.text = watchListName
         cell.WatchListContents.text = watchLists![indexPath.row].Tickers
         
+        // Active watchlist Icon code setting alpha of imageview based on isActive or not
         if watchLists![indexPath.row].isActive == false {
             cell.activeIcon.alpha = 0.0
         }
@@ -139,22 +107,9 @@ class WatchListViewController: UIViewController ,UITableViewDataSource,UITableVi
         
         return cell
     }
+
     
-    
-    //COMPLETED: need to place some sort of indicator for the user to allow them to see if this is the currently active list
-    
-    //COMPLETED: Need to make the change to default list only occur if this is the currently active list
-    
-    //COMPLETED: Dont let the user be able to delete all the watch lists. There has to be One in the system at all times
-    
-    //COMPLETED: need to invoke a refresh of the active watchlist in the Main View controller
-    
-    //TODO: Notify the user when they are not allowed to delete a watch list since it is the only watchlist left
-    
-    //QOL: Push notify the user if they really want to delete a watch list
-    
-    
-    
+    // Handling Deletion of Watch Lists
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             

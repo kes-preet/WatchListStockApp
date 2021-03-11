@@ -15,7 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        //has launched checks for first ever launch of application if so creates an initial watchlist with the provided default values
         let hasLaunchedKey = "HasLaunched"
         let defaults = UserDefaults.standard
         let hasLaunched = defaults.bool(forKey: hasLaunchedKey)
