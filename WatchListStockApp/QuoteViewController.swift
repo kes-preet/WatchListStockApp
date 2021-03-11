@@ -169,7 +169,7 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
     // Retrieve the chart data from iex Cloud API
     func getData(tickerSymbol: String)
     {
-        AF.request("https://sandbox.iexapis.com/stable/stock/\(tickerSymbol)/chart?token=Tpk_f4da85ac85c8471da814382d612cfdf9",method: .get,encoding: JSONEncoding.default).responseJSON { response in
+        AF.request("https://cloud.iexapis.com/stable/stock/\(tickerSymbol)/chart?token=pk_0f17ab07e2aa49f78c2164b4922d5369",method: .get,encoding: JSONEncoding.default).responseJSON { response in
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
