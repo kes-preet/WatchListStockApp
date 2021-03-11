@@ -17,6 +17,12 @@ protocol refreshViewController {
 }
 
 
+extension Double {
+    var dollarString: String {
+        return String(format: "$%.2f", self)
+    }
+}
+
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, refreshViewController {
 
@@ -78,6 +84,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func runTableRefresher()
     {
+        
+        
         self.tableRefreshTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true, block: { (timer) in
 
             DispatchQueue.main.async {
@@ -315,6 +323,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
+    
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell", for: indexPath) as! CustomTableViewCell
   
@@ -327,8 +337,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         cell.myLabel.text = symbolText
         cell.myNameLabel.text = nameString
-        cell.myImageView.backgroundColor = .green
-        cell.myPriceLabel.text = String(lastPriceText)
+        cell.myPriceLabel.text = lastPriceText.dollarString
+        
+        
+        if quotes![indexPath.row].lastPrice < quotes![indexPath.row].openPrice {
+            cell.myImageView.backgroundColor = .red
+        }
+        else{
+            cell.myImageView.backgroundColor = .green
+        }
+        
         
         if askPriceText == 0.0
         {
@@ -336,7 +354,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         else
         {
-            cell.myAskPriceLabel.text = String(askPriceText)
+            cell.myAskPriceLabel.text = askPriceText.dollarString
         }
         
         if bidPriceText == 0.0
@@ -345,7 +363,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         else
         {
-            cell.myBidPriceLabel.text = String(bidPriceText)
+            cell.myBidPriceLabel.text = bidPriceText.dollarString
         }
    
        
@@ -430,7 +448,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                                             "name": jsonQuote["companyName"].string! ,
                                             "lastPrice": jsonQuote["latestPrice"].double!,
                                             "askPrice": jsonQuote["iexAskPrice"].double ?? 0.0,
-                                            "bidPrice": jsonQuote["iexBidPrice"].double ?? 0.0
+                                            "bidPrice": jsonQuote["iexBidPrice"].double ?? 0.0,
+                                            "openPrice": jsonQuote["iexOpen"].double ?? 0.0,
                                             ],
                 
                                           update: .all)
@@ -457,6 +476,7 @@ class Quote: Object {
     @objc dynamic var lastPrice = 0.0
     @objc dynamic var askPrice = 0.0
     @objc dynamic var bidPrice = 0.0
+    @objc dynamic var openPrice = 0.0
     
     override class func primaryKey() -> String? {
         return "id"

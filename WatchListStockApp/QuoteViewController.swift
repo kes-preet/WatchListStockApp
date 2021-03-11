@@ -12,6 +12,7 @@ import RealmSwift
 import Charts
 
 
+
 class QuoteViewController: UIViewController ,ChartViewDelegate {
 
     @IBOutlet weak var stockySymbolLabel: UILabel!
@@ -58,17 +59,17 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
         if quote!.bidPrice == 0.0 {
             self.stockBidLabel.text = "N/A"
         } else {
-            self.stockBidLabel.text = String(quote!.bidPrice)
+            self.stockBidLabel.text =  quote!.bidPrice.dollarString
         }
         
         if quote!.askPrice == 0.0 {
             self.stockAskLabel.text = "N/A"
         } else {
-            self.stockAskLabel.text = String(quote!.askPrice)
+            self.stockAskLabel.text =  quote!.askPrice.dollarString
         }
         
         self.stockNameLabel.text = quote?.name
-        self.stockPriceLabel.text = String(quote!.lastPrice)
+        self.stockPriceLabel.text =  quote!.lastPrice.dollarString
         
         self.getLastMonthDates()
         self.getData(tickerSymbol: quote!.id)
@@ -84,6 +85,7 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
            // self.lineChart.notifyDataSetChanged()
            // print(self.developedChartDataDict)
             
+            
         })
 
     }
@@ -91,13 +93,23 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        lineChart.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.width)
-        lineChart.center = view.center
-        view.addSubview(lineChart)
+  
+        
+        
+        
+        
+        lineChart.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width - 20, height: self.view.frame.size.width - 20)
+        lineChart.extraTopOffset = 150
+        lineChart.legend.enabled = false
         lineChart.xAxis.enabled = false
+        lineChart.isUserInteractionEnabled = false
+        
+    
+        view.addSubview(lineChart)
+        
 
         var dateArray = [String]()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8){
        
         
             var entries = [ChartDataEntry]()
@@ -107,7 +119,7 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
       
             var today = Date()
          
-            for x in 0...29{
+            for _ in 0...29{
                 let tomorrow = Calendar.current.date(byAdding: .day,value: -1, to: today)
                 let date = DateFormatter()
                 date.dateFormat = "yyyy-MM-dd"
@@ -125,11 +137,20 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
                     entries.append(ChartDataEntry(x: Double(x), y: Double(self.chartDataDictionary[dateArray[x]]!)))
                 }
             }
+            
+         
           
         
             let set = LineChartDataSet(entries:entries)
-            set.colors = ChartColorTemplates.material()
+            //set.colors = ChartColorTemplates.init()
+
+            set.setColor(.green)
+                
         
+            
+            
+            set.circleRadius = 0
+            set.lineWidth = 5.0
             let data = LineChartData(dataSet: set)
             self.lineChart.data = data
         }
@@ -143,7 +164,7 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
     
     func prepLibraryForDateSorting()
     {
-        var dateFormatter = DateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
         for (date,_) in self.chartDataDictionary {
@@ -154,7 +175,7 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
             
         }
         
-        let sortedKeys = Array(self.developedChartDataDict.keys).sorted(by: { $0.compare($1) == .orderedDescending })
+      //  let sortedKeys = Array(self.developedChartDataDict.keys).sorted(by: { $0.compare($1) == .orderedDescending })
 
         
        // debugPrint(self.chartDataDictionary)
@@ -176,7 +197,7 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
             dateArray.append(stringDate)
             self.chartDataDictionary[stringDate] = 0.0
         }
-       // print(dateArray)
+ 
     }
     
     
@@ -186,16 +207,16 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
         if quote!.bidPrice == 0.0 {
             self.stockBidLabel.text = "N/A"
         } else {
-            self.stockBidLabel.text = String(quote!.bidPrice)
+            self.stockBidLabel.text = quote!.bidPrice.dollarString
         }
         
         if quote!.askPrice == 0.0 {
             self.stockAskLabel.text = "N/A"
         } else {
-            self.stockAskLabel.text = String(quote!.askPrice)
+            self.stockAskLabel.text = quote!.askPrice.dollarString
         }
         
-        self.stockPriceLabel.text = String(quote!.lastPrice)
+        self.stockPriceLabel.text = quote!.lastPrice.dollarString
         
     }
     
@@ -207,41 +228,24 @@ class QuoteViewController: UIViewController ,ChartViewDelegate {
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
-               // print(json)
+
 
                 
                 for (_,subJson):(String,JSON) in json {
-//
-//                    print(subJson["date"])
-//                    print(subJson["close"])
-//                    print(subJson["open"])
+
                     
                     let closeDouble = subJson["close"].double
                     let openDouble = subJson["open"].double
                     
                     let averageHistorical = (openDouble! + closeDouble!)/2
                     
-                    //print(" avg historical: " + String(averageHistorical))
-                    // hash the date with the average value
+               
                     
                     self.chartDataDictionary[subJson["date"].string!] = averageHistorical
                     
                 }
             
-              // print(self.chartDataDictionary)
-//                try! self.realm.write {
-//
-//                    self.realm.create(Quote.self,value:[
-//                                        "id":json["symbol"].string! ,
-//                                        "name": json["companyName"].string!,
-//                                        "lastPrice": json["latestPrice"].double!,
-//                                        "askPrice": json["iexAskPrice"].double!,
-//                                        "bidPrice": json["iexBidPrice"].double!
-//                                        ]
-//                                      ,update: .all)
-//
-//
-//                }
+  
 
             case .failure(let error):
                 print(error)

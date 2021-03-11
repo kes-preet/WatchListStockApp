@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             defaults.set(true,forKey: hasLaunchedKey)
             let defaultWatchList = WatchList()
             defaultWatchList.Tickers = ["AAPL","MSFT","GOOG"].sorted().map {String(describing: $0) }.joined(separator: ",")
-            defaultWatchList.name = "Default WatchList"
+            defaultWatchList.name = "My first list"
             defaultWatchList.isActive = true
             
             try! realm.write{
