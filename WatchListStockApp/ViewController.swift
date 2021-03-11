@@ -315,7 +315,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             return
         }
         
-        AF.request("https://sandbox.iexapis.com/stable/stock/market/batch?symbols=\(tickersJoined)&types=quote&range=1m&last=5&token=Tsk_80f9ac6b9d784e00a0a5e5935bc52d5e").responseJSON { response in
+        AF.request("https://cloud.iexapis.com/stable/stock/market/batch?symbols=\(tickersJoined)&types=quote&range=1m&last=5&token=pk_0f17ab07e2aa49f78c2164b4922d5369").responseJSON { response in
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
